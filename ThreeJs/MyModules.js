@@ -1,28 +1,29 @@
 /**
- * Modules.js是3D库区图显示模型存放的地方
+ * MyModules.js是3D显示模型存放的地方
  * 该文件存放建模相关的内容，库区以及货架货物等都会放在这个文件里面。
- *
- * @author 谢宁, Created on 2018-06-07
  */
 /** ***************************************************************** */
 //模型材质信息
-var planeMat, RackMat, RackMat2, CargoMat, LineMat, RollTexture, RollMat;
-//库区信息
+var planeMat, RackMat, CargoMat, LineMat;
+//分区信息
 var storageZoneSize = 0,
 	storageZoneList = [];
-//货架信息
+//书架架信息
 var shelfSize = 0,
 	shelfList = [];
-//货位信息
+//存书位位信息
 var storageUnitSize = 0,
 	storageUnitList = [];
-//货物信息
+//书本信息
 var cargoSize = 0,
 	cargoList = [],
 	CargosExist;
-/*  创建货架货位对象像创建JAVA类的初始化，对象的获取也是仿照了JAVA的GET方法。这样在需要创建货架货位的地方只需要调用对象的初始化方法，赋予相应的值。在需要获取对象的地方调用GET方法就好了。*/
+/* 创建书架存书位对象像创建JAVA类的初始化，
+对象的获取也是仿照了JAVA的GET方法。
+这样在需要创建货架货位的地方只需要调用对象的初始化方法，赋予相应的值。
+在需要获取对象的地方调用GET方法就好了。 */
 
-//创建库区对象
+//创建分区对象
 function storageZone(StorageZoneId, StorageZoneName,
 	coordinateX, coordinateZ,
 	width, length,
@@ -38,7 +39,7 @@ function storageZone(StorageZoneId, StorageZoneName,
 	this.textposition = textposition;
 }
 
-//根据库区编码获取库区对象
+//根据分区编码获取分区对象
 function getStorageZoneById(StorageZoneId) {
 	for (var i = 0; i < storageZoneSize; i++) {
 		if (storageZoneList[i].StorageZoneId == StorageZoneId) {
@@ -47,30 +48,30 @@ function getStorageZoneById(StorageZoneId) {
 	}
 }
 
-/* 创建的货架没有使用外部导入的3D模型，全部使用ThreeJs创建各类长方体拼接而成，比如单层货架就是一个长方体作货架板面，再加上四个小长方体作支架。 */
-//创建货架对象
+/* 创建的书架没有使用外部导入的3D模型，全部使用ThreeJs创建各类长方体拼接而成，比如单层书架就是一个长方体作书架板面，再加上四个小长方体作支架。 */
+//创建书架对象
 function shelf(storageZoneId, shelfId, shelfName,
 	planeLength, planeWidth, planeHeight,
 	holderLength, holderWidth, holderHeight,
 	positionX, positionY, positionZ,
 	layerNum, columnNum) {
-	this.storageZoneId = storageZoneId;
-	this.shelfId = shelfId;
-	this.shelfName = shelfName;
-	this.planeLength = planeLength;
+	this.storageZoneId = storageZoneId; //区域
+	this.shelfId = shelfId; //ID
+	this.shelfName = shelfName; //名字
+	this.planeLength = planeLength; //面板长宽高
 	this.planeWidth = planeWidth;
 	this.planeHeight = planeHeight;
-	this.holderLength = holderLength;
+	this.holderLength = holderLength; //支架长宽高
 	this.holderWidth = holderWidth;
 	this.holderHeight = holderHeight;
 	this.positionX = positionX;
 	this.positionY = positionY;
 	this.positionZ = positionZ;
-	this.layerNum = layerNum;
-	this.columnNum = columnNum;
+	this.layerNum = layerNum; //层数
+	this.columnNum = columnNum; //列数
 }
 
-//根据货架编码获取货架对象
+//根据书架编码获取书架对象
 function getShelfById(shelfId) {
 	for (var i = 0; i < shelfSize; i++) {
 		if (shelfList[i].shelfId == shelfId) {
@@ -79,22 +80,22 @@ function getShelfById(shelfId) {
 	}
 }
 
-//创建货位对象
+//创建存书位对象
 function storageUnit(storageZoneId, shelfId, shelfName,
 	inLayerNum, inColumnNum,
 	positionX, positionY, positionZ, storageUnitId) {
 	this.storageZoneId = storageZoneId;
 	this.shelfId = shelfId;
 	this.shelfName = shelfName;
-	this.inLayerNum = inLayerNum;
-	this.inColumnNum = inColumnNum;
+	this.inLayerNum = inLayerNum; //层数
+	this.inColumnNum = inColumnNum; //列数
 	this.positionX = positionX;
 	this.positionY = positionY;
 	this.positionZ = positionZ;
 	this.storageUnitId = storageUnitId;
 }
 
-//根据货架ID、层数、列数获取货位对象
+//根据书架ID、层数、列数获取存书位对象
 function getStorageUnitById(shelfId, inLayerNum, inColumnNum) {
 	for (var i = 0; i < storageUnitSize; i++) {
 		if (storageUnitList[i].shelfId == shelfId && storageUnitList[i].inLayerNum == inLayerNum && storageUnitList[i].inColumnNum ==
@@ -104,7 +105,7 @@ function getStorageUnitById(shelfId, inLayerNum, inColumnNum) {
 	}
 }
 
-//根据库位编码获取货位对象
+//根据存书位ID获取存书位对象
 function getStorageUnitByUnitId(storageUnitId) {
 	for (var i = 0; i < storageUnitSize; i++) {
 		if (storageUnitList[i].storageUnitId == storageUnitId) {
@@ -113,61 +114,19 @@ function getStorageUnitByUnitId(storageUnitId) {
 	}
 }
 
-//创建货物对象
-function cargo(batchNo, prodBatchNo, inBatchNo,
-	matId, matClassId, matName,
-	qty, qtyUom, qty2,
-	warehouseId, storageZoneId, storageUnitId,
-	positionX, positionY, positionZ,
-	length, width, height) {
-	this.batchNo = batchNo;
-	this.prodBatchNo = prodBatchNo;
-	this.inBatchNo = inBatchNo;
-	this.matId = matId;
-	this.matClassId = matClassId;
-	this.matName = matName;
-	this.qtyUom = qtyUom;
-	this.qty2 = qty2;
-	this.warehouseId = warehouseId;
-	this.storageZoneId = storageZoneId;
-	this.storageUnitId = storageUnitId;
-	this.positionX = positionX;
-	this.positionY = positionY;
-	this.positionZ = positionZ;
-	this.length = length;
-	this.width = width;
-	this.height = height;
-}
-
 /**
  *  初始化材质信息 
  * */
 function initMat() {
-	planeMat = new THREE.MeshLambertMaterial();
 	RackMat = new THREE.MeshLambertMaterial();
-	RackMat2 = new THREE.MeshPhongMaterial({
-		color: 0x1C86EE
-	});
 	CargoMat = new THREE.MeshBasicMaterial();
 	LineMat = new THREE.MeshLambertMaterial();
-	RollMat = new THREE.MeshLambertMaterial();
-
 	//加载获取纹理里面的图片，引入纹理，把纹理传给该材质
 	//创建材质 里面加纹理 因为上面的纹理里面有图片 所以相当于在材质上面贴图片
-	new THREE.TextureLoader().load('./ThreeJs/images/plane.png', function(map) {
-		planeMat.map = map; //map里面放纹理（这里是图片）对象
-		planeMat.transparent = true;
-		planeMat.opacity = 0.8;
-		planeMat.needsUpdate = true;
-	});
 	new THREE.TextureLoader().load("./ThreeJs/images/rack.png", function(map) {
 		RackMat.map = map;
 		RackMat.needsUpdate = true;
-	});
-	// new THREE.TextureLoader().load("./ThreeJs/images/书籍正面.jpg", function(map) {
-	// 	CargoMat.map = map;
-	// 	CargoMat.needsUpdate = true;
-	// });
+	}); //书架纹理
 	var materials = [];
 	materials.push(new THREE.MeshBasicMaterial({
 		map: THREE.ImageUtils.loadTexture('./ThreeJs/images/书籍正面.jpg', {}, function() {
@@ -205,22 +164,12 @@ function initMat() {
 		}),
 		overdraw: true
 	}));
-	CargoMat = materials;
+	CargoMat = materials; //书籍纹理
 
-	//
 	new THREE.TextureLoader().load("./ThreeJs/images/line.png", function(map) {
 		LineMat.map = map;
 		LineMat.needsUpdate = true;
-	});
-	RollTexture = new THREE.TextureLoader().load("./ThreeJs/images/biaoyu.png", function(map) {
-		RollMat.map = map;
-		RollMat.needsUpdate = true;
-		RollMat.transparent = true;
-		RollMat.side = THREE.DoubleSide; //两面贴
-	});
-	RollTexture.wrapS = THREE.RepeatWrapping; //重复包裹
-	RollTexture.wrapT = THREE.RepeatWrapping;
-	RackMat2 = RackMat;
+	}); //分区边界线纹理
 }
 
 //region 放置天空盒
@@ -287,9 +236,8 @@ function createFloor(chang, kuan, gao) {
 			map: texture,
 		});
 		var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-		// floor.position.set(0,-4000,0);
 		floor.rotation.x = -Math.PI / 2;
-		floor.name = "地面";
+		floor.name = "墙";
 		scene.add(floor);
 	});
 }
@@ -305,15 +253,13 @@ function createCircle(r) {
 			map: texture,
 		});
 		var circle = new THREE.Mesh(circleGeometry, circleMaterial);
-		// floor.position.set(0,-4000,0);
-		//floor.rotation.x = -Math.PI / 2;
-		circle.name = "中央办公区";
+		circle.name = "墙";
 		scene.add(circle);
 	});
 }
 //endregion
 
-//region 矩形区域
+//region 形成分区的矩形区域
 function addPlane(x, z, width, length, scene) {
 	var lineWidth = 8
 	var geometry = new THREE.PlaneGeometry(lineWidth, length);
@@ -341,16 +287,15 @@ function addPlane(x, z, width, length, scene) {
 }
 //endregion
 
-//region 库区
-/** 放置虚线框区域和库区名称 */
+//region 分区
+/** 放置分区和设置分区名称 */
 function addArea(x, z, width, length, scene, name, textColor, font_size, textposition) {
 	addPlane(x, z, width, length, scene);
-	new THREE.FontLoader().load('./ThreeJs/FZYaoTi_Regular.json', function(font) {
-		////加入立体文字
+	new THREE.FontLoader().load('./ThreeJs/FZYaoTi_Regular.json', function(font) { //加入立体文字
 		var text = new THREE.TextGeometry(name.split("$")[1], {
 			font: font, // 设定文字字体
 			size: font_size, //尺寸
-			height: 0.1 //厚度
+			height: 0.5 //厚度
 		});
 		text.computeBoundingBox(); //使用TextGeometry这个类来创建文本，给场景添加必要的文字说明
 		//3D文字材质
@@ -376,62 +321,6 @@ function addArea(x, z, width, length, scene, name, textColor, font_size, textpos
 //创建墙纹理
 //左、右、上、下、后、前面的材质信息
 function createWallMaterail() {
-	matArrayA.push(new THREE.MeshPhongMaterial({
-		color: 0xafc0ca
-	})); //  0xafc0ca :灰色
-	matArrayA.push(new THREE.MeshPhongMaterial({
-		color: 0xafc0ca
-	})); //
-	matArrayA.push(new THREE.MeshPhongMaterial({
-		color: 0xd6e4ec
-	})); //  0xd6e4ec： 偏白色
-	matArrayA.push(new THREE.MeshPhongMaterial({
-		color: 0xd6e4ec
-	})); //
-	matArrayA.push(new THREE.MeshPhongMaterial({
-		color: 0xafc0ca
-	})); //    0xafc0ca :灰色
-	matArrayA.push(new THREE.MeshPhongMaterial({
-		color: 0xafc0ca
-	})); //
-
-	matArrayB.push(new THREE.MeshPhongMaterial({
-		color: 0xafc0ca
-	})); //  0xafc0ca :灰色
-	matArrayB.push(new THREE.MeshPhongMaterial({
-		color: 0x9cb2d1
-	})); //  0x9cb2d1：淡紫
-	matArrayB.push(new THREE.MeshPhongMaterial({
-		color: 0xd6e4ec
-	})); //  0xd6e4ec： 偏白色
-	matArrayB.push(new THREE.MeshPhongMaterial({
-		color: 0xd6e4ec
-	})); //
-	matArrayB.push(new THREE.MeshPhongMaterial({
-		color: 0xafc0ca
-	})); //   0xafc0ca :灰色
-	matArrayB.push(new THREE.MeshPhongMaterial({
-		color: 0xafc0ca
-	})); //
-
-	matArrayC.push(new THREE.MeshPhongMaterial({
-		color: 0x8B4513
-	})); //左  0xFF8C00 :明黄色
-	matArrayC.push(new THREE.MeshPhongMaterial({
-		color: 0x8B4513
-	})); //右  
-	matArrayC.push(new THREE.MeshPhongMaterial({
-		color: 0xD2691E
-	})); //上  0xCD853F：褐色
-	matArrayC.push(new THREE.MeshPhongMaterial({
-		color: 0xD2691E
-	})); //下
-	matArrayC.push(new THREE.MeshPhongMaterial({
-		color: 0xD2691E
-	})); //后   0x8B4513 :马鞍棕色
-	matArrayC.push(new THREE.MeshPhongMaterial({
-		color: 0xD2691E
-	})); //前
 	//透明蓝玻璃材质
 	var materialBlueClass = new THREE.MeshLambertMaterial({
 		color: 0x6495ED,
@@ -626,8 +515,8 @@ function dingQiu(r) {
 //endregion创建门窗
 
 
-//region 货架货位
-/** 放置单层货架 */
+//region 书架存书位
+/** 放置单层书架 */
 /** x,y,z 整个模型在场景中的位置 */
 /** plane_x,plane_y,plane_z 货架板面的长高宽 */
 /** holder_x,holder_y,holder_z 货架支架的长高宽 */
@@ -644,7 +533,7 @@ function addRack(x, y, z, plane_x, plane_y, plane_z, holder_x, holder_y, holder_
 
 		var storageUnitId = msg.split("$")[1] + "$" + msg.split("$")[3] + "$" + msg.split("$")[4];
 
-		//添加货位
+		//添加存书位
 		var storageUnit_obj = new storageUnit(msg.split("$")[0],
 			msg.split("$")[1],
 			msg.split("$")[2],
@@ -655,15 +544,15 @@ function addRack(x, y, z, plane_x, plane_y, plane_z, holder_x, holder_y, holder_
 		storageUnitSize++;
 
 		var Unit = getStorageUnitById(msg.split("$")[1], msg.split("$")[3], msg.split("$")[4]);
-		obj.name = "货位" + "$" + Unit.storageUnitId;
+		obj.name = "存书位：" + "$" + Unit.storageUnitId;
 		scene.add(obj);
 	}
 
 	var holder = new THREE.BoxGeometry(holder_x, holder_y, holder_z);
-	var obj2 = new THREE.Mesh(holder, RackMat2, 0);
-	var obj3 = new THREE.Mesh(holder, RackMat2, 0);
-	var obj4 = new THREE.Mesh(holder, RackMat2, 0);
-	var obj5 = new THREE.Mesh(holder, RackMat2, 0);
+	var obj2 = new THREE.Mesh(holder, RackMat, 0);
+	var obj3 = new THREE.Mesh(holder, RackMat, 0);
+	var obj4 = new THREE.Mesh(holder, RackMat, 0);
+	var obj5 = new THREE.Mesh(holder, RackMat, 0);
 
 	obj2.position.set(x - plane_x / 2 + holder_x / 2, y - holder_y / 2 - plane_y / 2, z + holder_z / 2);
 	obj3.position.set(x + plane_x / 2 - holder_x / 2, y - holder_y / 2 - plane_y / 2, z + holder_z / 2);
@@ -675,15 +564,15 @@ function addRack(x, y, z, plane_x, plane_y, plane_z, holder_x, holder_y, holder_
 	scene.add(obj5);
 }
 
-/** 放置一叠货架 */
-/** stack_num 货架的叠数 */
+/** 放置一叠书架 */
+/** stack_num 书架的叠数 */
 function addStackOfRack(x, y, z, plane_x, plane_y, plane_z, holder_x, holder_y, holder_z, scene, name, num, stack_num) {
 	for (var i = 0; i < stack_num; i++) {
 		addRack(x, y * (i + 1), z, plane_x, plane_y, plane_z, holder_x, holder_y, holder_z, scene, name + "$" + (i + 1), num);
 	}
 }
 
-/** 根据3D库图货架配置表添加货架 */
+/** 根据书架配置表添加书架 */
 function addShelf(scene, n) {
 	var shelf_list = GET_SHELF_LIST(n);
 	shelfSize = shelf_list.length; //总共的书架个数
@@ -726,6 +615,22 @@ function addOneUnitCargos(shelfId, inLayerNum, inColumnNum, scene) {
 	var x = storageUnit.positionX;
 	var y = storageUnit.positionY + GET_BOX_SIZE() / 2 + shelf.planeHeight / 2;
 	var z = storageUnit.positionZ;
-	addCargo(x, y, z, GET_BOX_SIZE() * 2, GET_BOX_SIZE() * 0.8, GET_BOX_SIZE() * 3, scene, "货物" + "$" + storageUnitid)
+	// addCargo(x, y, z, GET_BOX_SIZE() * 2, GET_BOX_SIZE() * 0.8, GET_BOX_SIZE() * 3, scene, "货物" + "$" + storageUnitid)
+	addCargo(x, y, z, GET_BOX_SIZE() * 2, GET_BOX_SIZE() * 0.8, GET_BOX_SIZE() * 3, scene, "书本")
+}
+//endregion
+
+//region寻找书架
+function searchShelf(shelfID) {
+	var searchObjects = [];
+	for (var i = 0; i < scene.children.length; i++) {
+		var Msg = scene.children[i].name;
+		if ( Msg == "书架") {
+			searchObjects.push(scene.children[i]);
+			if(searchObjects[0].shelfId==shelfID){
+				scene.remove(searchObjects[0]);
+			}
+		}
+	}
 }
 //endregion

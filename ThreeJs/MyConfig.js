@@ -31,7 +31,8 @@ for (var i = 0; i < 11; i++) {
 	shelf_list_zhonger.push({
 		StorageZoneId: '中庭二区',
 		shelfId: '中二' + (i+1),
-		shelfName: '中二书架',
+		shelfName: '中庭二区第'+(i+1)+'书架',
+			// shelfName: '书架',
 		x: (i - 5) * initstep1,
 		y: 27,
 		z: -1500
@@ -47,7 +48,7 @@ for (var i = 0; i < 52; i++) {
 		shelf_list_xiyi.push({
 			StorageZoneId: '西一区',
 			shelfId: '西一' + (i+1),
-			shelfName: '西一书架',
+			shelfName: '西一区第'+(i+1)+'书架',
 			x: (i - 5) * initstep2 - 2780,
 			y: 27,
 			z: 1000
@@ -56,7 +57,7 @@ for (var i = 0; i < 52; i++) {
 		shelf_list_xiyi.push({
 			StorageZoneId: '西一区',
 			shelfId: '西一' +(i+1),
-			shelfName: '西一书架',
+			shelfName: '西一区第'+(i+1)+'书架',
 			x: (i % 26 - 5) * initstep2 - 2780,
 			y: 27,
 			z: 500
@@ -71,7 +72,7 @@ for (var i = 0; i < 52; i++) {
 		shelf_list_dongyi.push({
 			StorageZoneId: '东一区',
 			shelfId: '东一' +(i+1),
-			shelfName: '东一书架',
+			shelfName: '东一区第'+(i+1)+'书架',
 			x: (i - 5) * initstep3 + 980,
 			y: 27,
 			z: 1000
@@ -80,7 +81,7 @@ for (var i = 0; i < 52; i++) {
 		shelf_list_dongyi.push({
 			StorageZoneId: '东一区',
 			shelfId: '东一' +(i+1),
-			shelfName: '东一书架',
+			shelfName: '东一区第'+(i+1)+'书架',
 			x: (i % 26 - 5) * initstep3 + 980,
 			y: 27,
 			z: 500
@@ -96,7 +97,7 @@ for (var i = 0; i < 10; i++) {
 		shelf_list_zhongsan.push({
 			StorageZoneId: '中庭三区',
 			shelfId: '中三' + (i+1),
-			shelfName: '中三书架',
+			shelfName: '中庭三区第'+(i+1)+'书架',
 			x: (i - 5) * initstep4 + 2100,
 			y: 27,
 			z: -1300
@@ -105,7 +106,7 @@ for (var i = 0; i < 10; i++) {
 		shelf_list_zhongsan.push({
 			StorageZoneId: '中庭三区',
 			shelfId: '中三' + (i+1),
-			shelfName: '中三书架',
+			shelfName: '中庭三区第'+(i+1)+'书架',
 			x: (i % 5 - 5) * initstep4 + 2100,
 			y: 27,
 			z: -800
@@ -120,7 +121,7 @@ for (var i = 0; i < 10; i++) {
 		shelf_list_zhongyi.push({
 			StorageZoneId: '中庭一区',
 			shelfId: '中一' + (i+1),
-			shelfName: '中一书架',
+			shelfName: '中庭一区第'+(i+1)+'书架',
 			x: (i - 5) * initstep5 - 880,
 			y: 27,
 			z: -1300
@@ -129,7 +130,7 @@ for (var i = 0; i < 10; i++) {
 		shelf_list_zhongyi.push({
 			StorageZoneId: '中庭一区',
 			shelfId: '中一' + (i+1),
-			shelfName: '中一书架',
+			shelfName: '中庭一区第'+(i+1)+'书架',
 			x: (i % 5 - 5) * initstep5 - 880,
 			y: 27,
 			z: -800
@@ -191,7 +192,7 @@ function GET_BOX_SIZE() {
 	return BOX_SIZE;
 }
 
-function GET_SHELF_LIST(n) {
+function GET_SHELF_LIST(n) {//书架配置表
 	if (n == 1) {
 		return shelf_list_zhongyi;
 	} else if (n == 2) {

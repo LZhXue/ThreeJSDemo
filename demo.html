@@ -28,7 +28,7 @@
 		<script src="ThreeJs/js/ShaderPass.js" tppabs="http://www.yuyaowujin.top/ThreeJs/js/ShaderPass.js"></script>
 		<script src="ThreeJs/js/ThreeBSP.js" tppabs="http://www.yuyaowujin.top/ThreeJs/js/ThreeBSP.js"></script>
 		<script src="ThreeJs/ThreeJs_Drag.js" tppabs="http://www.yuyaowujin.top/ThreeJs/ThreeJs_Drag.js" charset="UTF-8"></script>
-		<script src="ThreeJs/ThreeJs_Composer.js" tppabs="http://www.yuyaowujin.top/ThreeJs/ThreeJs_Composer.js" charset="UTF-8"></script>
+		<script src="ThreeJs/MyThreeJsComposer.js" tppabs="http://www.yuyaowujin.top/ThreeJs/ThreeJs_Composer.js" charset="UTF-8"></script>
 		<script src="ThreeJs/MyModules.js" <!-- tppabs="http://www.yuyaowujin.top/ThreeJs/Modules.js" -->
 			charset = "UTF-8" >
 		</script>
@@ -46,11 +46,12 @@
 		<div id="container"></div>
 		<script>
 			var scene, camera, renderer, controls, light, composer, transformControls;
+			var chooseArea = 2; //123是中一二三区，4西一区，5东一区，其他全部返回
 			var materialBlueClass, sphereMaterial;
 			var matArrayA = []; //内墙
 			var matArrayB = []; //外墙
 			var matArrayC = []; //外墙
-			var options=[];
+			var options = [];
 			/**
 			 * 初始化场景,创建场景对象scene
 			 */
@@ -88,6 +89,11 @@
 				var pointLight = new THREE.PointLight();
 				pointLight.position.set(0, 1500, 10000);
 				scene.add(pointLight);
+				//添加聚光灯光源
+				var spotLight = new THREE.SpotLight(0xff0000);
+				spotLight.position.set(0, 600, 0);
+				spotLight.castShadow = true;
+				scene.add(spotLight);
 			}
 
 			/**
@@ -158,44 +164,44 @@
 					map: backTexture,
 				});
 				//createCubeWall(width, height, depth, angle, material, x, y, z, name)width长度, height高度, depth前后的厚度
-				createCubeWall(120, 400, 200, 0, hengLiangMaterial, -1700, 200, 2500, "门左墙");
-				createCubeWall(120, 400, 200, 0, hengLiangMaterial, 1700, 200, 2500, "门右墙");
-				createCubeWall(3520, 40, 600, 0, hengLiangMaterial, 0, 420, 2300, "门横梁");
-				createCubeWall(10, 440, 200, 0, materialBlueClass, -2000, 220, 1900, "门前大玻璃左侧");
-				createCubeWall(10, 440, 200, 0, materialBlueClass, 2000, 220, 1900, "门前大玻璃右侧");
-				createCubeWall(4000, 40, 200, 0, materialBlueClass, 0, 420, 1900, "门前大玻璃顶部");
-				createCubeWall(20, 2000, 4000, 0, huangHeMaterial, -3500, 1000, -200, "左侧褐色墙");
-				createCubeWall(20, 2000, 4000, 0, huangHeMaterial, 3500, 1000, -200, "右侧褐色墙");
-				createCubeWall(7000, 2000, 20, 0, backMaterial, 0, 1000, -2200, "后侧褐色墙");
-				createCubeWall(4000, 20, 600, 0, huangHeTiaoMaterial, 0, 1040, 1510, "第二层柱子支撑面");
-				createCubeWall(20, 960, 600, 0, huangHeMaterial, -2000, 1520, 1510, "第二层柱子支撑面左");
-				createCubeWall(20, 960, 600, 0, huangHeMaterial, 2000, 1520, 1510, "第二层柱子支撑面右");
-				createCubeWall(4000, 960, 20, 0, materialBlueClass, 0, 1520, 1210, "第二层柱子支撑面右");
-				createCubeWall(7020, 20, 4020, 0, huangHeMaterial, 0, 2000, -200, "封顶的墙");
+				createCubeWall(120, 400, 200, 0, hengLiangMaterial, -1700, 200, 2500, "墙"); //门左墙
+				createCubeWall(120, 400, 200, 0, hengLiangMaterial, 1700, 200, 2500, "墙"); //门右墙
+				createCubeWall(3520, 40, 600, 0, hengLiangMaterial, 0, 420, 2300, "墙"); //门横梁
+				createCubeWall(10, 440, 200, 0, materialBlueClass, -2000, 220, 1900, "墙"); //门前大玻璃左侧
+				createCubeWall(10, 440, 200, 0, materialBlueClass, 2000, 220, 1900, "墙"); //门前大玻璃右侧
+				createCubeWall(4000, 40, 200, 0, materialBlueClass, 0, 420, 1900, "墙"); //门前大玻璃顶部
+				createCubeWall(20, 2000, 4000, 0, huangHeMaterial, -3500, 1000, -200, "墙"); //左侧褐色墙
+				createCubeWall(20, 2000, 4000, 0, huangHeMaterial, 3500, 1000, -200, "墙"); //右侧褐色墙
+				createCubeWall(7000, 2000, 20, 0, backMaterial, 0, 1000, -2200, "墙"); //后侧褐色墙
+				createCubeWall(4000, 20, 600, 0, huangHeTiaoMaterial, 0, 1040, 1510, "墙"); //第二层柱子支撑面
+				createCubeWall(20, 960, 600, 0, huangHeMaterial, -2000, 1520, 1510, "墙"); //第二层柱子支撑面左
+				createCubeWall(20, 960, 600, 0, huangHeMaterial, 2000, 1520, 1510, "墙"); //第二层柱子支撑面右
+				createCubeWall(4000, 960, 20, 0, materialBlueClass, 0, 1520, 1210, "墙"); //第二层柱子后面的蓝色玻璃
+				createCubeWall(7020, 40, 4020, 0, huangHeMaterial, 0, 2000, -200, "墙"); //封顶的墙
 				dingQiu(1000);
 				createPillarUp(scene);
 				//返回墙对象returnWallObject(width, height, depth, angle, material, x, y, z, name)
-				var wall = returnWallObject(4000, 440, 10, 0, materialBlueClass, 0, 220, 2000, "门前大玻璃");
+				var wall = returnWallObject(4000, 440, 10, 0, materialBlueClass, 0, 220, 2000, "墙"); //门前大玻璃
 				//先在墙面上挖出门的框
-				var door_cube1 = returnWallObject(600, 400, 10, 0, materialBlueClass, -400, 200, 2000, "前门1");
-				var door_cube2 = returnWallObject(600, 400, 10, 0, materialBlueClass, 400, 200, 2000, "前门2");
+				var door_cube1 = returnWallObject(600, 400, 10, 0, materialBlueClass, -400, 200, 2000, "门"); //前门1
+				var door_cube2 = returnWallObject(600, 400, 10, 0, materialBlueClass, 400, 200, 2000, "门"); //前门2
 				var objects_cube = [];
 				objects_cube.push(door_cube1);
 				objects_cube.push(door_cube2);
 				createResultBsp(wall, objects_cube, materialBlueClass);
 				//再为墙面安装门
 				//createDoor_right(width, height, depth, angle, x, y, z, name)
-				createDoor_left(300, 400, 10, 0, -600, 200, 2000, "门1左");
-				createDoor_right(300, 400, 10, 0, -200, 200, 2000, "门1右");
-				createDoor_left(300, 400, 10, 0, 200, 200, 2000, "门2左");
-				createDoor_right(300, 400, 10, 0, 600, 200, 2000, "门2右");
+				createDoor_left(300, 400, 10, 0, -600, 200, 2000, "门左"); //门1左
+				createDoor_right(300, 400, 10, 0, -200, 200, 2000, "门右"); //门1右
+				createDoor_left(300, 400, 10, 0, 200, 200, 2000, "门左"); //门2左
+				createDoor_right(300, 400, 10, 0, 600, 200, 2000, "门右"); //门2右
 				//开窗户
-				var wallUp = returnWallObject(4000, 600, 20, 0, huangHeTiaoMaterial, 0, 740, 1810, "玻璃顶上的褐色墙");
+				var wallUp = returnWallObject(4000, 600, 20, 0, huangHeTiaoMaterial, 0, 740, 1810, "墙"); //玻璃顶上的褐色墙
 				//先在墙面上挖出门的框
-				var window_cube1 = returnWallObject(400, 400, 20, 0, huangHeTiaoMaterial, -1200, 740, 1810, "中窗户1");
-				var window_cube2 = returnWallObject(400, 400, 20, 0, huangHeTiaoMaterial, -400, 740, 1810, "中窗户2");
-				var window_cube3 = returnWallObject(400, 400, 20, 0, huangHeTiaoMaterial, 400, 740, 1810, "中窗户3");
-				var window_cube4 = returnWallObject(400, 400, 20, 0, huangHeTiaoMaterial, 1200, 740, 1810, "中窗户4");
+				var window_cube1 = returnWallObject(400, 400, 20, 0, huangHeTiaoMaterial, -1200, 740, 1810, "窗"); //中窗户左起1
+				var window_cube2 = returnWallObject(400, 400, 20, 0, huangHeTiaoMaterial, -400, 740, 1810, "窗"); //中窗户2
+				var window_cube3 = returnWallObject(400, 400, 20, 0, huangHeTiaoMaterial, 400, 740, 1810, "窗"); //中窗户3
+				var window_cube4 = returnWallObject(400, 400, 20, 0, huangHeTiaoMaterial, 1200, 740, 1810, "窗"); //中窗户4
 				var objects_windowCube = [];
 				objects_windowCube.push(window_cube1);
 				objects_windowCube.push(window_cube2);
@@ -204,30 +210,30 @@
 				createResultBsp(wallUp, objects_windowCube, huangHeTiaoMaterial);
 				//为墙面安装窗户
 				//createWindow(width, height, depth, angle, x, y, z, name)
-				createWindow(400, 400, 20, 0, -1200, 740, 1810, "中窗户1");
-				createWindow(400, 400, 20, 0, -400, 740, 1810, "中窗户2");
-				createWindow(400, 400, 20, 0, 400, 740, 1810, "中窗户3");
-				createWindow(400, 400, 20, 0, 1200, 740, 1810, "中窗户4");
+				createWindow(400, 400, 20, 0, -1200, 740, 1810, "窗"); //中窗户左起1
+				createWindow(400, 400, 20, 0, -400, 740, 1810, "窗"); //中窗户2
+				createWindow(400, 400, 20, 0, 400, 740, 1810, "窗"); //中窗户3
+				createWindow(400, 400, 20, 0, 1200, 740, 1810, "窗"); //中窗户4
 
 				//开左右窗户
 				//开左窗户
-				var wallLeft = returnWallObject(1520, 2000, 20, 0, huangHeTiaoMaterial, -2750, 1000, 1810, "玻璃左侧褐色墙");
-				var window_cube_left1 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3300, 300, 1810, "左窗户1");
-				var window_cube_left2 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3000, 300, 1810, "左窗户2");
-				var window_cube_left3 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2500, 300, 1810, "左窗户3");
-				var window_cube_left4 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2200, 300, 1810, "左窗户4");
-				var window_cube_left5 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3300, 800, 1810, "左窗户5");
-				var window_cube_left6 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3000, 800, 1810, "左窗户6");
-				var window_cube_left7 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2500, 800, 1810, "左窗户7");
-				var window_cube_left8 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2200, 800, 1810, "左窗户8");
-				var window_cube_left9 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3300, 1300, 1810, "左窗户9");
-				var window_cube_left10 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3000, 1300, 1810, "左窗户10");
-				var window_cube_left11 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2500, 1300, 1810, "左窗户11");
-				var window_cube_left12 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2200, 1300, 1810, "左窗户12");
-				var window_cube_left13 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3300, 1800, 1810, "左窗户13");
-				var window_cube_left14 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3000, 1800, 1810, "左窗户14");
-				var window_cube_left15 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2500, 1800, 1810, "左窗户15");
-				var window_cube_left16 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2200, 1800, 1810, "左窗户16");
+				var wallLeft = returnWallObject(1520, 2000, 20, 0, huangHeTiaoMaterial, -2750, 1000, 1810, "墙"); //玻璃左侧褐色墙
+				var window_cube_left1 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3300, 300, 1810, "窗"); //左窗户1
+				var window_cube_left2 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3000, 300, 1810, "窗");
+				var window_cube_left3 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2500, 300, 1810, "窗");
+				var window_cube_left4 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2200, 300, 1810, "窗");
+				var window_cube_left5 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3300, 800, 1810, "窗");
+				var window_cube_left6 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3000, 800, 1810, "窗");
+				var window_cube_left7 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2500, 800, 1810, "窗");
+				var window_cube_left8 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2200, 800, 1810, "窗");
+				var window_cube_left9 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3300, 1300, 1810, "窗");
+				var window_cube_left10 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3000, 1300, 1810, "窗");
+				var window_cube_left11 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2500, 1300, 1810, "窗");
+				var window_cube_left12 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2200, 1300, 1810, "窗");
+				var window_cube_left13 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3300, 1800, 1810, "窗");
+				var window_cube_left14 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -3000, 1800, 1810, "窗");
+				var window_cube_left15 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2500, 1800, 1810, "窗");
+				var window_cube_left16 = returnWallObject(150, 400, 20, 0, huangHeMaterial, -2200, 1800, 1810, "窗"); //左窗户16
 				var objects_windowCubeLeft = [];
 				objects_windowCubeLeft.push(window_cube_left1);
 				objects_windowCubeLeft.push(window_cube_left2);
@@ -246,41 +252,41 @@
 				objects_windowCubeLeft.push(window_cube_left15);
 				objects_windowCubeLeft.push(window_cube_left16);
 				createResultBsp(wallLeft, objects_windowCubeLeft, huangHeMaterial);
-				createWindow(150, 400, 20, 0, -3300, 300, 1810, "左窗户1");
-				createWindow(150, 400, 20, 0, -3000, 300, 1810, "左窗户2");
-				createWindow(150, 400, 20, 0, -2500, 300, 1810, "左窗户3");
-				createWindow(150, 400, 20, 0, -2200, 300, 1810, "左窗户4");
-				createWindow(150, 400, 20, 0, -3300, 800, 1810, "左窗户5");
-				createWindow(150, 400, 20, 0, -3000, 800, 1810, "左窗户6");
-				createWindow(150, 400, 20, 0, -2500, 800, 1810, "左窗户7");
-				createWindow(150, 400, 20, 0, -2200, 800, 1810, "左窗户8");
-				createWindow(150, 400, 20, 0, -3300, 1300, 1810, "左窗户9");
-				createWindow(150, 400, 20, 0, -3000, 1300, 1810, "左窗户10");
-				createWindow(150, 400, 20, 0, -2500, 1300, 1810, "左窗户11");
-				createWindow(150, 400, 20, 0, -2200, 1300, 1810, "左窗户12");
-				createWindow(150, 400, 20, 0, -3300, 1800, 1810, "左窗户13");
-				createWindow(150, 400, 20, 0, -3000, 1800, 1810, "左窗户14");
-				createWindow(150, 400, 20, 0, -2500, 1800, 1810, "左窗户15");
-				createWindow(150, 400, 20, 0, -2200, 1800, 1810, "左窗户16");
+				createWindow(150, 400, 20, 0, -3300, 300, 1810, "窗"); //左窗户1
+				createWindow(150, 400, 20, 0, -3000, 300, 1810, "窗");
+				createWindow(150, 400, 20, 0, -2500, 300, 1810, "窗");
+				createWindow(150, 400, 20, 0, -2200, 300, 1810, "窗");
+				createWindow(150, 400, 20, 0, -3300, 800, 1810, "窗");
+				createWindow(150, 400, 20, 0, -3000, 800, 1810, "窗");
+				createWindow(150, 400, 20, 0, -2500, 800, 1810, "窗");
+				createWindow(150, 400, 20, 0, -2200, 800, 1810, "窗");
+				createWindow(150, 400, 20, 0, -3300, 1300, 1810, "窗");
+				createWindow(150, 400, 20, 0, -3000, 1300, 1810, "窗");
+				createWindow(150, 400, 20, 0, -2500, 1300, 1810, "窗");
+				createWindow(150, 400, 20, 0, -2200, 1300, 1810, "窗");
+				createWindow(150, 400, 20, 0, -3300, 1800, 1810, "窗");
+				createWindow(150, 400, 20, 0, -3000, 1800, 1810, "窗");
+				createWindow(150, 400, 20, 0, -2500, 1800, 1810, "窗");
+				createWindow(150, 400, 20, 0, -2200, 1800, 1810, "窗"); //左窗户16
 
 				//开右窗户
-				var wallLeft = returnWallObject(1520, 2000, 20, 0, huangHeTiaoMaterial, 2750, 1000, 1810, "玻璃右侧褐色墙");
-				var window_cube_left1 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3300, 300, 1810, "右窗户1");
-				var window_cube_left2 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3000, 300, 1810, "右窗户2");
-				var window_cube_left3 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2500, 300, 1810, "右窗户3");
-				var window_cube_left4 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2200, 300, 1810, "右窗户4");
-				var window_cube_left5 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3300, 800, 1810, "右窗户5");
-				var window_cube_left6 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3000, 800, 1810, "右窗户6");
-				var window_cube_left7 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2500, 800, 1810, "右窗户7");
-				var window_cube_left8 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2200, 800, 1810, "右窗户8");
-				var window_cube_left9 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3300, 1300, 1810, "右窗户9");
-				var window_cube_left10 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3000, 1300, 1810, "右窗户10");
-				var window_cube_left11 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2500, 1300, 1810, "右窗户11");
-				var window_cube_left12 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2200, 1300, 1810, "右窗户12");
-				var window_cube_left13 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3300, 1800, 1810, "右窗户13");
-				var window_cube_left14 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3000, 1800, 1810, "右窗户14");
-				var window_cube_left15 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2500, 1800, 1810, "右窗户15");
-				var window_cube_left16 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2200, 1800, 1810, "右窗户16");
+				var wallLeft = returnWallObject(1520, 2000, 20, 0, huangHeTiaoMaterial, 2750, 1000, 1810, "墙"); //玻璃右侧褐色墙
+				var window_cube_left1 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3300, 300, 1810, "窗");
+				var window_cube_left2 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3000, 300, 1810, "窗");
+				var window_cube_left3 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2500, 300, 1810, "窗");
+				var window_cube_left4 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2200, 300, 1810, "窗");
+				var window_cube_left5 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3300, 800, 1810, "窗");
+				var window_cube_left6 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3000, 800, 1810, "窗");
+				var window_cube_left7 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2500, 800, 1810, "窗");
+				var window_cube_left8 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2200, 800, 1810, "窗");
+				var window_cube_left9 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3300, 1300, 1810, "窗");
+				var window_cube_left10 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3000, 1300, 1810, "窗");
+				var window_cube_left11 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2500, 1300, 1810, "窗");
+				var window_cube_left12 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2200, 1300, 1810, "窗");
+				var window_cube_left13 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3300, 1800, 1810, "窗");
+				var window_cube_left14 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 3000, 1800, 1810, "窗");
+				var window_cube_left15 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2500, 1800, 1810, "窗");
+				var window_cube_left16 = returnWallObject(150, 400, 20, 0, huangHeMaterial, 2200, 1800, 1810, "窗"); ////右窗户16
 				var objects_windowCubeLeft = [];
 				objects_windowCubeLeft.push(window_cube_left1);
 				objects_windowCubeLeft.push(window_cube_left2);
@@ -299,22 +305,22 @@
 				objects_windowCubeLeft.push(window_cube_left15);
 				objects_windowCubeLeft.push(window_cube_left16);
 				createResultBsp(wallLeft, objects_windowCubeLeft, huangHeMaterial);
-				createWindow(150, 400, 20, 0, 3300, 300, 1810, "右窗户1");
-				createWindow(150, 400, 20, 0, 3000, 300, 1810, "右窗户2");
-				createWindow(150, 400, 20, 0, 2500, 300, 1810, "右窗户3");
-				createWindow(150, 400, 20, 0, 2200, 300, 1810, "右窗户4");
-				createWindow(150, 400, 20, 0, 3300, 800, 1810, "右窗户5");
-				createWindow(150, 400, 20, 0, 3000, 800, 1810, "右窗户6");
-				createWindow(150, 400, 20, 0, 2500, 800, 1810, "右窗户7");
-				createWindow(150, 400, 20, 0, 2200, 800, 1810, "右窗户8");
-				createWindow(150, 400, 20, 0, 3300, 1300, 1810, "右窗户9");
-				createWindow(150, 400, 20, 0, 3000, 1300, 1810, "右窗户10");
-				createWindow(150, 400, 20, 0, 2500, 1300, 1810, "右窗户11");
-				createWindow(150, 400, 20, 0, 2200, 1300, 1810, "右窗户12");
-				createWindow(150, 400, 20, 0, 3300, 1800, 1810, "右窗户13");
-				createWindow(150, 400, 20, 0, 3000, 1800, 1810, "右窗户14");
-				createWindow(150, 400, 20, 0, 2500, 1800, 1810, "右窗户15");
-				createWindow(150, 400, 20, 0, 2200, 1800, 1810, "右窗户16");
+				createWindow(150, 400, 20, 0, 3300, 300, 1810, "窗"); //右窗户1
+				createWindow(150, 400, 20, 0, 3000, 300, 1810, "窗");
+				createWindow(150, 400, 20, 0, 2500, 300, 1810, "窗");
+				createWindow(150, 400, 20, 0, 2200, 300, 1810, "窗");
+				createWindow(150, 400, 20, 0, 3300, 800, 1810, "窗");
+				createWindow(150, 400, 20, 0, 3000, 800, 1810, "窗");
+				createWindow(150, 400, 20, 0, 2500, 800, 1810, "窗");
+				createWindow(150, 400, 20, 0, 2200, 800, 1810, "窗");
+				createWindow(150, 400, 20, 0, 3300, 1300, 1810, "窗");
+				createWindow(150, 400, 20, 0, 3000, 1300, 1810, "窗");
+				createWindow(150, 400, 20, 0, 2500, 1300, 1810, "窗");
+				createWindow(150, 400, 20, 0, 2200, 1300, 1810, "窗");
+				createWindow(150, 400, 20, 0, 3300, 1800, 1810, "窗");
+				createWindow(150, 400, 20, 0, 3000, 1800, 1810, "窗");
+				createWindow(150, 400, 20, 0, 2500, 1800, 1810, "窗");
+				createWindow(150, 400, 20, 0, 2200, 1800, 1810, "窗"); //右窗户16
 
 				// addArea(x,z,width,length,scene,name,textColor,font_size,textposition)
 				addArea(1900, 960, 3160, 1000, scene, "ID1$东一区", "FF070F", 60, "左对齐");
@@ -362,21 +368,30 @@
 			 */
 			function initGui() {
 				options = new function() {
-					this.batchNo = '';
-					this.qty = 0;
-					this.qtyUom = '';
-					this.qty2 = 0;
-					this.实时全景监控 = function() {
-						window.open("3DVideo.html" /*tpa=http://www.yuyaowujin.top/3DVideo.html*/ );
+					this.storageNum = 0;
+					this.shelfArea = 0;
+					this.shelfNum = 0;
+					this.查看书架位置 = function(){//寻找书架
+						var searchObjects = [];
+						for (var i = 0; i < scene.children.length; i++) {
+							var Msg = scene.children[i].name.split("$");
+							if (scene.children[i].isMesh && Msg[0] == "书架") {
+								searchObjects.push(scene.children[i]);
+								
+							}
+						}
+					}
+					this.实时全景漫游 = function() {
+						window.open("demo.html"); //全景浏览的链接
 					};
 				};
 				var gui = new dat.GUI();
-				gui.domElement.style = 'position:absolute;top:10px;left:0px;height:600px';
-				gui.add(options, 'batchNo').name("物料批号：").listen();
-				gui.add(options, 'qty').name("数量：").listen();
-				gui.add(options, 'qtyUom').name("单位：").listen();
-				gui.add(options, 'qty2').name("件数：").listen();
-				gui.add(options, '实时全景监控');
+				gui.domElement.style = 'position:absolute;top:10px;right:0px;height:600px';
+				gui.add(options, 'storageNum').name("楼层号：").listen();
+				gui.add(options, 'shelfArea').name("书架区位：").listen();
+				gui.add(options, 'shelfNum').name("书架号：").listen();
+				gui.add(options, '查看书架位置');
+				gui.add(options, '实时全景漫游');
 			}
 
 			/**
@@ -390,7 +405,6 @@
 				//initStats();性能插件
 				initRenderer();
 				initContent();
-				var chooseArea = 2; //123是中一二三区，4西一区，5东一区，其他全部返回
 				addShelf(scene, chooseArea);
 				initLight();
 				initControls();
@@ -409,13 +423,15 @@
 				//添加拖动效果
 				// 过滤不是 Mesh 的物体,例如辅助网格
 				var objects = [];
-				// for (var i = 0; i < scene.children.length; i++) {
-				// 	var Msg = scene.children[i].name.split("$");
-				// 	if (scene.children[i].isMesh && Msg[0] == "货物") {
-				// 		objects.push(scene.children[i]);
-				// 	}
-				// }
-				composer = new THREE.ThreeJs_Composer(renderer, scene, camera, options,objects); //添加选中时的蒙版
+				for (var i = 0; i < scene.children.length; i++) {
+					var Msg = scene.children[i].name.split("$");
+					if (scene.children[i].isMesh && Msg[0] == "书本") {
+						objects.push(scene.children[i]);
+					}
+				}
+				//添加选中时的蒙版
+				// new THREE.ThreeJs_Composer(renderer, scene, camera);
+				composer = new THREE.ThreeJs_Composer(renderer, scene, camera); //添加选中时的蒙版
 				var dragControls = new THREE.DragControls(objects, camera, renderer.domElement);
 				dragControls.addEventListener('dragstart', function(event) {
 					controls.enabled = false;
