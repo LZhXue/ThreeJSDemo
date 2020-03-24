@@ -1,4 +1,1 @@
-# ThreeJsDemo
-在线演示地址：
-http://www.yuyaowujin.top/3DProject.html
-# ThreeJSDemo
+This is a 3D virtual space of a library. It is a graduation projet of my undergraduation.
