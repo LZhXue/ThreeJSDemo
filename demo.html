@@ -47,11 +47,6 @@
 		<script>
 			var scene, camera, renderer, controls, light, composer, transformControls;
 			var chooseArea = 2; //123是中一二三区，4西一区，5东一区，其他全部返回
-			var materialBlueClass, sphereMaterial;
-			var matArrayA = []; //内墙
-			var matArrayB = []; //外墙
-			var matArrayC = []; //外墙
-			var options = [];
 			/**
 			 * 初始化场景,创建场景对象scene
 			 */
@@ -369,27 +364,26 @@
 			function initGui() {
 				options = new function() {
 					this.storageNum = 0;
-					this.shelfArea = 0;
 					this.shelfNum = 0;
 					this.查看书架位置 = function(){//寻找书架
-						var searchObjects = [];
-						for (var i = 0; i < scene.children.length; i++) {
-							var Msg = scene.children[i].name.split("$");
-							if (scene.children[i].isMesh && Msg[0] == "书架") {
-								searchObjects.push(scene.children[i]);
-								
-							}
-						}
+					
 					}
 					this.实时全景漫游 = function() {
 						window.open("demo.html"); //全景浏览的链接
 					};
 				};
 				var gui = new dat.GUI();
+				gui.add(options, 'storageNum').name("楼层编号：")
 				gui.domElement.style = 'position:absolute;top:10px;right:0px;height:600px';
-				gui.add(options, 'storageNum').name("楼层号：").listen();
-				gui.add(options, 'shelfArea').name("书架区位：").listen();
-				gui.add(options, 'shelfNum').name("书架号：").listen();
+				var shelfAreaFolder = gui.addFolder( '请选择书架所在分区：' );
+				var dropdown= { state: '中庭1区' };// 默认值设置
+				var choice = [ '中庭1区', '中庭2区', '中庭3区', '东一区', '西一区'];//选项
+				var clipCtrl = shelfAreaFolder .add( dropdown, 'state' ).options( choice );// 添加
+				clipCtrl.onChange( function () {// 设置点击事件
+								// do something
+				} );
+
+				gui.add(options, 'shelfNum').name("书架编号：").listen();
 				gui.add(options, '查看书架位置');
 				gui.add(options, '实时全景漫游');
 			}
@@ -409,16 +403,19 @@
 				initLight();
 				initControls();
 				initGui();
+				//searchShelf("中二2");
+				// var oo = scene.getObjectByName('存书位:$中二3$2$1',true);
+				// scene.remove(oo);
 				//initaxesHelper(8000, scene); //初始化辅助坐标
-				//添加货物
-				var shelf_list = GET_SHELF_LIST(chooseArea);
-				for (var i = 1; i <= GET_LAYER_NUM(); i++) {
-					for (var j = 1; j <= GET_COLUMN_NUM(); j++) {
-						for (var k = 1; k <= shelf_list.length; k++) {
-							addOneUnitCargos(shelf_list[k - 1].shelfId, i, j, scene);
-						}
-					}
-				}
+				//添加书本
+				// var shelf_list = GET_SHELF_LIST(chooseArea);
+				// for (var i = 1; i <= GET_LAYER_NUM(); i++) {
+				// 	for (var j = 1; j <= GET_COLUMN_NUM(); j++) {
+				// 		for (var k = 1; k <= shelf_list.length; k++) {
+				// 			addOneUnitCargos(shelf_list[k - 1].shelfId, i, j, scene);
+				// 		}
+				// 	}
+				// }
 
 				//添加拖动效果
 				// 过滤不是 Mesh 的物体,例如辅助网格
