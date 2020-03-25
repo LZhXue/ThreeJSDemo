@@ -1,7 +1,5 @@
 /**
- * 这是模型的静态常量配置
- * 和货架的配置（一般要从数据库读取，这里仅做演示）
- * @author 谢宁, Created on 2020-01-07
+ * 这是模型的静态常量配置和货架的配置
  */
 /** ***************************************************************** */
 //一些变量
@@ -30,9 +28,8 @@ for (var i = 0; i < 11; i++) {
 
 	shelf_list_zhonger.push({
 		StorageZoneId: '中庭二区',
-		shelfId: '中二' + (i+1),
+		shelfId: '中庭二区' + (i + 1),
 		shelfName: '中庭二区第'+(i+1)+'书架',
-			// shelfName: '书架',
 		x: (i - 5) * initstep1,
 		y: 27,
 		z: -1500
@@ -47,8 +44,8 @@ for (var i = 0; i < 52; i++) {
 	if (i < 26)
 		shelf_list_xiyi.push({
 			StorageZoneId: '西一区',
-			shelfId: '西一' + (i+1),
-			shelfName: '西一区第'+(i+1)+'书架',
+			shelfId: '西一区' + (i + 1),
+			shelfName: '西一区第' + (i + 1) + '书架',
 			x: (i - 5) * initstep2 - 2780,
 			y: 27,
 			z: 1000
@@ -56,8 +53,8 @@ for (var i = 0; i < 52; i++) {
 	else {
 		shelf_list_xiyi.push({
 			StorageZoneId: '西一区',
-			shelfId: '西一' +(i+1),
-			shelfName: '西一区第'+(i+1)+'书架',
+			shelfId: '西一区' + (i + 1),
+			shelfName: '西一区第' + (i + 1) + '书架',
 			x: (i % 26 - 5) * initstep2 - 2780,
 			y: 27,
 			z: 500
@@ -71,8 +68,8 @@ for (var i = 0; i < 52; i++) {
 	if (i < 26)
 		shelf_list_dongyi.push({
 			StorageZoneId: '东一区',
-			shelfId: '东一' +(i+1),
-			shelfName: '东一区第'+(i+1)+'书架',
+			shelfId: '东一区' + (i + 1),
+			shelfName: '东一区第' + (i + 1) + '书架',
 			x: (i - 5) * initstep3 + 980,
 			y: 27,
 			z: 1000
@@ -80,8 +77,8 @@ for (var i = 0; i < 52; i++) {
 	else {
 		shelf_list_dongyi.push({
 			StorageZoneId: '东一区',
-			shelfId: '东一' +(i+1),
-			shelfName: '东一区第'+(i+1)+'书架',
+			shelfId: '东一区' + (i + 1),
+			shelfName: '东一区第' + (i + 1) + '书架',
 			x: (i % 26 - 5) * initstep3 + 980,
 			y: 27,
 			z: 500
@@ -96,8 +93,8 @@ for (var i = 0; i < 10; i++) {
 	if (i < 5) {
 		shelf_list_zhongsan.push({
 			StorageZoneId: '中庭三区',
-			shelfId: '中三' + (i+1),
-			shelfName: '中庭三区第'+(i+1)+'书架',
+			shelfId: '中庭三区' + (i + 1),
+			shelfName: '中庭三区第' + (i + 1) + '书架',
 			x: (i - 5) * initstep4 + 2100,
 			y: 27,
 			z: -1300
@@ -105,8 +102,8 @@ for (var i = 0; i < 10; i++) {
 	} else {
 		shelf_list_zhongsan.push({
 			StorageZoneId: '中庭三区',
-			shelfId: '中三' + (i+1),
-			shelfName: '中庭三区第'+(i+1)+'书架',
+			shelfId: '中庭三区' + (i + 1),
+			shelfName: '中庭三区第' + (i + 1) + '书架',
 			x: (i % 5 - 5) * initstep4 + 2100,
 			y: 27,
 			z: -800
@@ -120,8 +117,8 @@ for (var i = 0; i < 10; i++) {
 	if (i < 5) {
 		shelf_list_zhongyi.push({
 			StorageZoneId: '中庭一区',
-			shelfId: '中一' + (i+1),
-			shelfName: '中庭一区第'+(i+1)+'书架',
+			shelfId: '中庭一区' + (i + 1),
+			shelfName: '中庭一区第' + (i + 1) + '书架',
 			x: (i - 5) * initstep5 - 880,
 			y: 27,
 			z: -1300
@@ -129,8 +126,8 @@ for (var i = 0; i < 10; i++) {
 	} else {
 		shelf_list_zhongyi.push({
 			StorageZoneId: '中庭一区',
-			shelfId: '中一' + (i+1),
-			shelfName: '中庭一区第'+(i+1)+'书架',
+			shelfId: '中庭一区' + (i + 1),
+			shelfName: '中庭一区第' + (i + 1) + '书架',
 			x: (i % 5 - 5) * initstep5 - 880,
 			y: 27,
 			z: -800
@@ -138,23 +135,6 @@ for (var i = 0; i < 10; i++) {
 	}
 
 }
-
-
-
-
-
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A1',shelfName:'货架A1',x:-300,y:27,z:0});
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A2',shelfName:'货架A2',x:-200,y:27,z:0});
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A3',shelfName:'货架A3',x:-100,y:27,z:0});
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A10',shelfName:'货架A93',x:000,y:27,z:0});
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A11',shelfName:'货架A10',x:100,y:27,z:0});
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A4',shelfName:'货架A4',x:200,y:27,z:0});
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A5',shelfName:'货架A5',x:300,y:27,z:0});
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A6',shelfName:'货架A6',x:400,y:27,z:0});
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A7',shelfName:'货架A7',x:500,y:27,z:0});
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A8',shelfName:'货架A8',x:600,y:27,z:0});
-//shelf_list.push({StorageZoneId:'Z1',shelfId:'A9',shelfName:'货架A9',x:700,y:27,z:0});
-
 
 function GET_PLANE_LENGTH() {
 	return PLANE_LENGTH;
@@ -192,7 +172,7 @@ function GET_BOX_SIZE() {
 	return BOX_SIZE;
 }
 
-function GET_SHELF_LIST(n) {//书架配置表
+function GET_SHELF_LIST(n) { //书架配置表
 	if (n == 1) {
 		return shelf_list_zhongyi;
 	} else if (n == 2) {

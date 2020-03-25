@@ -38,7 +38,6 @@
 		<script src="ThreeJs/MyConfig.js" <!-- tppabs="http://www.yuyaowujin.top/ThreeJs/config.js" -->
 			>
 		</script>
-		<script src="ThreeJs/three.js-master/examples/js/objects/Lensflare.js"></script>
 	</head>
 	<body>
 
@@ -46,7 +45,7 @@
 		<div id="container"></div>
 		<script>
 			var scene, camera, renderer, controls, light, composer, transformControls;
-			var chooseArea = 2; //123是中一二三区，4西一区，5东一区，其他全部返回
+			var chooseArea = 5; //123是中一二三区，4西一区，5东一区，其他全部返回
 			/**
 			 * 初始化场景,创建场景对象scene
 			 */
@@ -85,10 +84,10 @@
 				pointLight.position.set(0, 1500, 10000);
 				scene.add(pointLight);
 				//添加聚光灯光源
-				var spotLight = new THREE.SpotLight(0xff0000);
-				spotLight.position.set(0, 600, 0);
-				spotLight.castShadow = true;
-				scene.add(spotLight);
+				// var spotLight = new THREE.SpotLight(0xff0000);
+				// spotLight.position.set(0, 600, 0);
+				// spotLight.castShadow = true;
+				// scene.add(spotLight);
 			}
 
 			/**
@@ -365,24 +364,17 @@
 				options = new function() {
 					this.storageNum = 0;
 					this.shelfNum = 0;
-					this.查看书架位置 = function(){//寻找书架
-					
+					this.查看书架位置 = function() { //寻找书架
+					addShelf(scene, chooseArea);
+						searchShelf("东一区2");
 					}
 					this.实时全景漫游 = function() {
-						window.open("demo.html"); //全景浏览的链接
+						addShelf(scene, 6);
 					};
 				};
 				var gui = new dat.GUI();
-				gui.add(options, 'storageNum').name("楼层编号：")
-				gui.domElement.style = 'position:absolute;top:10px;right:0px;height:600px';
-				var shelfAreaFolder = gui.addFolder( '请选择书架所在分区：' );
-				var dropdown= { state: '中庭1区' };// 默认值设置
-				var choice = [ '中庭1区', '中庭2区', '中庭3区', '东一区', '西一区'];//选项
-				var clipCtrl = shelfAreaFolder .add( dropdown, 'state' ).options( choice );// 添加
-				clipCtrl.onChange( function () {// 设置点击事件
-								// do something
-				} );
-
+				gui.add(options, 'storageNum').name("所在楼层：");
+				gui.domElement.style = 'position:absolute;top:10px;left:0px;height:600px';
 				gui.add(options, 'shelfNum').name("书架编号：").listen();
 				gui.add(options, '查看书架位置');
 				gui.add(options, '实时全景漫游');
@@ -399,13 +391,11 @@
 				//initStats();性能插件
 				initRenderer();
 				initContent();
-				addShelf(scene, chooseArea);
+				// addShelf(scene, chooseArea);
 				initLight();
 				initControls();
 				initGui();
-				//searchShelf("中二2");
-				// var oo = scene.getObjectByName('存书位:$中二3$2$1',true);
-				// scene.remove(oo);
+
 				//initaxesHelper(8000, scene); //初始化辅助坐标
 				//添加书本
 				// var shelf_list = GET_SHELF_LIST(chooseArea);

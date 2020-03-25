@@ -508,7 +508,14 @@ function dingQiu(r) {
 		specular: 0xAFEEEE,
 		shininess: 5
 	}); //材质对象，有高光效果哟 MeshPhongMaterial镜面反射
+	var edgesMtl = new THREE.LineBasicMaterial({
+		color: 0xF0F8FF
+	});//边缘线材质
 	var sphere = new THREE.Mesh(sphereGeom.clone(), sphereMaterial);
+	//添加边缘线
+	var sphereEdges = new THREE.EdgesGeometry(sphereGeom, 1);
+	var sphereLine = new THREE.LineSegments(sphereEdges, edgesMtl);
+	sphere.add(sphereLine);
 	sphere.position.set(0, 2000, 0);
 	scene.add(sphere);
 }
@@ -622,15 +629,27 @@ function addOneUnitCargos(shelfId, inLayerNum, inColumnNum, scene) {
 
 //region寻找书架
 function searchShelf(shelfID) {
-	var searchObjects = [];
 	for (var i = 0; i < scene.children.length; i++) {
-		var Msg = scene.children[i].name;
-		if ( Msg == "书架") {
-			searchObjects.push(scene.children[i]);
-			if(searchObjects[0].shelfId==shelfID){
-				scene.remove(searchObjects[0]);
-			}
-		}
+		oo1 = getShelfById(shelfID);
+		var posx = oo1.positionX;
+		var posy = oo1.positionY;
+		var posz = oo1.positionZ;
+		var cubeGeometry = new THREE.BoxGeometry(100, 250, 500);
+		var material = new THREE.MeshLambertMaterial({
+			color: 0xFF0000,
+			opacity:0.2, //0~1之间0是全透明，1是不透明
+			transparent: true //是否开启透明度效果
+		}); 
+		var edgesMtl = new THREE.LineBasicMaterial({
+			color: 0xff0000
+		});
+		cube = new THREE.Mesh(cubeGeometry, material);
+		cube.position.set(posx,posy,posz+190);
+		var cubeEdges = new THREE.EdgesGeometry(cubeGeometry, 0.1);
+		var cubeLine = new THREE.LineSegments(cubeEdges, edgesMtl);
+		cube.add(cubeLine);
+		scene.add(cube);
+		break;
 	}
 }
 //endregion

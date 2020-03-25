@@ -23,7 +23,7 @@ THREE.ThreeJs_Composer = function(_renderer, _scene, _camera, _options, _selecto
 	var outlinePass = new THREE.OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), _scene, _camera);
 	outlinePass.edgeStrength = 5; //包围线浓度
 	outlinePass.edgeGlow = 8; //边缘线范围
-	outlinePass.edgeThickness =5; //边缘线浓度
+	outlinePass.edgeThickness = 5; //边缘线浓度
 	outlinePass.pulsePeriod = 4; //包围线闪烁评率
 	outlinePass.visibleEdgeColor.set('#FF0080'); //包围线颜色
 	outlinePass.hiddenEdgeColor.set('#FF0000'); //被遮挡的边界线颜色
@@ -57,7 +57,7 @@ THREE.ThreeJs_Composer = function(_renderer, _scene, _camera, _options, _selecto
 			return;
 		}
 		if (intersects[0].object.name == "墙" || (intersects[0].object.name == "") || (intersects[0].object.name == "门左") ||
-			(intersects[0].object.name == "门右") || (intersects[0].object.name == "窗")|| (intersects[0].object.name == "书本")) {
+			(intersects[0].object.name == "门右") || (intersects[0].object.name == "窗") || (intersects[0].object.name == "书本")) {
 			$("#label").attr("style", "display:none;"); //隐藏说明性标签
 			selectedObjects.pop();
 		} else {
@@ -83,7 +83,7 @@ THREE.ThreeJs_Composer = function(_renderer, _scene, _camera, _options, _selecto
 		// 	_selectobject.push(intersects[0].object);
 		// }
 		// 将点击到的物体的rotation属性，绕着Y轴旋转90度，5000是动画持续的时间，easing(TWEEN.Easing.Elastic.Out) 这段话的意思是动画会有个缓慢过渡的效果，大家可以看下面的两张GIF，前者是添加了easing效果的，关门后还会有一种来回晃动的效果（比较符合现实）；后者是没有该效果的，关门时瞬间闭合。
-
+		//实现关开门
 		if (intersects[0].object.name == "门左") {
 			if (door_state_left1) {
 				new TWEEN.Tween(intersects[0].object.rotation).to({
@@ -112,6 +112,7 @@ THREE.ThreeJs_Composer = function(_renderer, _scene, _camera, _options, _selecto
 	}
 
 	function onMouseDblClick(event) {
+		//将鼠标点击位置的屏幕坐标转成threejs中的标准坐标
 		var x, y;
 		if (event.changedTouches) {
 			x = event.changedTouches[0].pageX;
@@ -122,8 +123,8 @@ THREE.ThreeJs_Composer = function(_renderer, _scene, _camera, _options, _selecto
 		}
 		mouse.x = (x / window.innerWidth) * 2 - 1;
 		mouse.y = -(y / window.innerHeight) * 2 + 1;
-		raycaster.setFromCamera(mouse, _camera);
-		var intersects = raycaster.intersectObjects([_scene], true);
+		raycaster.setFromCamera(mouse, _camera); //从相机发射一条射线，经过鼠标点击位置
+		var intersects = raycaster.intersectObjects([_scene], true);//计算射线相机到的对象，可能有多个对象，因此返回的是一个数组，按离相机远近排列
 
 		if (intersects.length == 0) {
 			return;
